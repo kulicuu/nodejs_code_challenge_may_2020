@@ -1,0 +1,6 @@
+{
+    "dependencies": {
+        "express": "latest",
+        "nodemon": "^2.0.4"
+    }
+}
