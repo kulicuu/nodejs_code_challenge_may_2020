@@ -24,11 +24,12 @@ quicksort = ( rayy ) ->
     less_sorted = quicksort less
     more_sorted = quicksort more
     less_sorted.concat pivot, more_sorted
+counter = 0
 age_group_by_yob_str = (yob_str) ->
     year_maybe = parseInt yob_str
-    if year_maybe is NaN
+    if isNaN(year_maybe)
         return AGE_GROUPS.UNKNOWN
-    age_maybe = (Date.now().getFullYear - year_maybe)
+    age_maybe = (new Date()).getFullYear() - year_maybe
     switch
         when age_maybe < 21
             return AGE_GROUPS.ZERO_TO_TWENTY
@@ -44,7 +45,6 @@ age_group_by_yob_str = (yob_str) ->
             return AGE_GROUPS.UNKNOWN
 parse_station_info = (json_str) ->
     JSON.parse(json_str).data.stations.reduce (acc, station, idx) ->
-        # c 'station', station.id
         acc[station.station_id] = (JSON.stringify station)
         acc
     , {}
