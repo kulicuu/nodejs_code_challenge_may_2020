@@ -1,7 +1,10 @@
 {
     "dependencies": {
+        "bash-color": "latest",
         "body-parser": "latest",
         "express": "latest",
-        "express-jwt": "latest"
+        "express-jwt": "latest",
+        "jsonwebtoken": "latest",
+        "tiny-json-http": "latest"
     }
 }
