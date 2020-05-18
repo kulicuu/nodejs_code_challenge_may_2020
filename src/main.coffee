@@ -16,10 +16,4 @@ initialize = ->
     })
     c (green "Ready", on)
 
-
-
-
-
-
-
 initialize()

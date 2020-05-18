@@ -8,12 +8,10 @@ jwt = require 'jsonwebtoken'
 app = express()
 app.use body_parser.json()
 { blue, green, red, cyan, white } = require 'bash-color'
-
 generate_basic_token = (token_secret) ->
     jwt.sign {
         user: "user"
     }, token_secret
-
 module.exports = ({
     service_status,
     get_station_by_station_id,
