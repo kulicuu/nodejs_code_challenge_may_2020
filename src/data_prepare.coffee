@@ -2,6 +2,7 @@ c = console.log.bind console
 fs = require 'fs'
 { promisify } = require 'util'
 read_file = promisify fs.readFile
+tiny = require 'tiny-json-http'
 AGE_GROUPS =
     ZERO_TO_TWENTY: 'ZERO_TO_TWENTY'
     TWENTYONE_TO_THIRTY: 'TWENTYONE_TO_THIRTY'
@@ -43,18 +44,25 @@ age_group_by_yob_str = (yob_str) ->
             return AGE_GROUPS.FIFTYONE_UP
         else
             return AGE_GROUPS.UNKNOWN
-parse_station_info = (json_str) ->
-    JSON.parse(json_str).data.stations.reduce (acc, station, idx) ->
+# parse_station_info_old = (json_str) ->
+#     JSON.parse(json_str).data.stations.reduce (acc, station, idx) ->
+#         acc[station.station_id] = (JSON.stringify station)
+#         acc
+#     , {}
+parse_station_info = (stations) ->
+    stations.reduce (acc, station, idx) ->
         acc[station.station_id] = (JSON.stringify station)
         acc
     , {}
 ready_station_arq = -> new Promise (resolve) ->
-    fp = '../../station_information.json'
-    read_file fp, { encoding: 'utf8' }
-        .then (text) ->
-            resolve (parse_station_info text)
-        .catch (err) ->
-            c 'ERROR:', err
+    opts =
+        url: 'https://gbfs.divvybikes.com/gbfs/en/station_information.json'
+    tiny.get opts, (err, data) ->
+        if err
+            c err
+        else
+            # c Object.keys(data.body.data), 'obj keys data'
+            resolve (parse_station_info data.body.data.stations)
 parse_item_two = (lines) ->
     lines.reduce (acc, line, idx) ->
         items = line.split ','
@@ -105,7 +113,6 @@ ready_trip_arq = -> new Promise (resolve) ->
         resolve [ (parse_item_three lines), (parse_item_two lines) ]
     .catch (err) ->
         c 'ERROR:', err
-
 
 
 exports.main = ->

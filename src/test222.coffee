@@ -3,7 +3,6 @@ fs = require 'fs'
 { promisify } = require 'util'
 read_file = promisify fs.readFile
 tiny = require 'tiny-json-http'
-
 service_status =
     service_ready: false
     basic_token_secret: 'placeholder_token_secret'
@@ -31,19 +30,6 @@ f100 = ->
         c data.body, 'token?'
         basic_token = data.body
 
-        opts2 =
-            url: 'http://localhost:7000/get_station_by_station_id'
-            headers:
-                Authorization: "Bearer #{basic_token}"
-            data:
-                station_id: "35"
-
-        tiny.post opts2, (err, data) ->
-            if err
-                c err
-            c data, 'data2323'
-
-
         opts3 =
             url: 'http://localhost:7000/get_age_group_breakdown_by_stations_ids'
             headers:
@@ -65,5 +51,21 @@ f100 = ->
         tiny.post opts4, (err, data) ->
             if err then c err
             c data.body.last_twenty_trips_by_station_obj["5"]
+
+
+        opts2 =
+            url: 'http://localhost:7000/get_station_by_station_id'
+            headers:
+                Authorization: "Bearer #{basic_token}"
+            data:
+                station_id: "35"
+
+        tiny.post opts2, (err, data) ->
+            if err
+                c err
+            c data, 'data2323'
+
+
+
 
 f100()
