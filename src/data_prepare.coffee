@@ -11,7 +11,7 @@ AGE_GROUPS =
     UNKNOWN: 'UNKNOWN'
 quicksort = ( rayy ) ->
     if (rayy.length is 1) or (rayy.length is 0) then return rayy
-    rand_idx = Math.floor(Math.random() * len)
+    rand_idx = Math.floor(Math.random() * rayy.length)
     [pivot] = rayy.splice rand_idx, 1
     less = []
     more = []
@@ -52,7 +52,7 @@ ready_station_arq = -> new Promise (resolve) ->
     fp = '../../station_information.json'
     read_file fp, { encoding: 'utf8' }
         .then (text) ->
-            resolve { result: (parse_station_info text) }
+            resolve (parse_station_info text)
         .catch (err) ->
             c 'ERROR:', err
 parse_item_two = (lines) ->
@@ -86,12 +86,11 @@ parse_item_three = (lines) ->
         trip_score = (new Date(parseInt(year), parseInt(month), parseInt(day), parseInt(hour), parseInt(minute), parseInt(second))).getTime()
         if not acc[station_id]
             acc[station_id] = {
-                top_20: {}
+                top_20: []
             }
         { top_20 } = acc[station_id]
-        top_20.push
-        { score: trip_score, trip_str: line }
-        if top_20.length is 20
+        top_20.push { score: trip_score, trip_str: line }
+        while top_20.length > 20
             top_20 = (quicksort top_20)
             top_20.shift()
         acc
